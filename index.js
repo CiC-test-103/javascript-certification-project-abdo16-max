@@ -44,10 +44,27 @@ async function handleCommand(command) {
        *   - Grab the args (code is given)
        *   - Use implemented functions in LinkedList to add the Student, and display the updated LinkedList
        */
-        console.log('Adding student...')
-        const [name, year, email, specialization] = args
-        // --------> WRITE YOUR CODE BELOW
+       console.log('Adding student...');
+const [name, year, email, specialization] = args;
 
+if (!name || !year || !email || !specialization) {
+  console.log('Usage: add [name] [year] [email] [specialization]');
+  break;
+}
+
+const classYear = Number(year);
+if (Number.isNaN(classYear) || classYear < 0) {
+  console.log('Year must be a non-negative number.');
+  break;
+}
+
+const student = new Student(name, email, classYear, specialization);
+studentManagementSystem.addStudent(student);
+
+console.log('Current students:', studentManagementSystem.displayStudents());
+break;
+
+      
         // --------> WRITE YOUR CODE ABOVE
         break;
 
@@ -62,8 +79,17 @@ async function handleCommand(command) {
        */
       console.log('Removing student...')
       // --------> WRITE YOUR CODE BELOW
-      
+      {
+        const [removeEmail] =args;
+        if (!removeEmail){
+          console.log('Usage: remove [email]');
+          break;
+        }
+        studentManagementSystem.removeStudent(removeEmail);
+        console.log('Current students:', studentManagementSystem.displayStudents());
+
       // --------> WRITE YOUR CODE ABOVE
+      }
       break;
 
     case 'display':
@@ -75,7 +101,10 @@ async function handleCommand(command) {
        */
       console.log('Displaying students...')
       // --------> WRITE YOUR CODE BELOW
-
+      {
+        const listStr = studentManagementSystem.displayStudents();
+        console.log(listStr.length ? listStr : '(no students)');
+      }
       // --------> WRITE YOUR CODE ABOVE
       break;
 
@@ -91,7 +120,23 @@ async function handleCommand(command) {
        */
       console.log('Finding student...')
       // --------> WRITE YOUR CODE BELOW
-      
+      {
+        const [findEmail] = args;
+        if (!findEmail){
+           console.log('Usage: find [email]');
+          break;
+        }
+         const found = studentManagementSystem.findStudent(findEmail);
+        if (found === -1){
+           console.log('Student does not exist');
+        } else{
+            console.log(`Found:
+  Name: ${found.getName()}
+  Email: ${found.getEmail()}
+  Year: ${found.getYear()}
+  Specialization: ${found.getSpecialization()}`);
+        }
+      }
       // --------> WRITE YOUR CODE ABOVE
       break;
 
@@ -106,6 +151,20 @@ async function handleCommand(command) {
        */
       console.log('Saving data...')
       // --------> WRITE YOUR CODE BELOW
+      {
+       const [saveFileName] = args;
+        if (!saveFileName){
+          console.log('Usage: save [fileName]');
+          break;
+        }
+        try{
+          await studentManagementSystem.saveToJson(saveFileName);
+          console.log(`Saved to ${saveFileName}`);
+        } catch (err){
+           console.log('Error saving file:', err.message);
+        }
+      }
+      break;
 
       // --------> WRITE YOUR CODE ABOVE
 
@@ -120,8 +179,21 @@ async function handleCommand(command) {
        */
       console.log('Loading data...')
       // --------> WRITE YOUR CODE BELOW
+      {
+        const [loadFileName] = args;
+        if (!loadFileName) {
+          console.log('Usage: load [fileName]');
+          break;
+      }
+      try {
+        await studentManagementSystem.loadFromJSON(loadFileName);
+          console.log('Loaded. Current students:', studentManagementSystem.displayStudents())
+      } catch(err){
+         console.log('Error loading file:', err.message);
+      }
 
       // --------> WRITE YOUR CODE ABOVE
+    }
       break;
 
     case 'clear':
@@ -133,7 +205,13 @@ async function handleCommand(command) {
        *   - Use implemented functions in LinkedList to clear the data
        */
       console.log('Clearing data...')
-      // --------> WRITE YOUR CODE BELOW
+      // --------> WRITE YOUR CODE BEL
+        studentManagementSystem.head = null;
+        studentManagementSystem.tail = null;
+        studentManagementSystem.length = 0;
+        console.log('Linked list cleared.');
+      
+
 
       // --------> WRITE YOUR CODE ABOVE
       break;
@@ -148,7 +226,6 @@ async function handleCommand(command) {
         break;
   }
 }
-
 // Start terminal-based interaction (DO NOT MODIFY)
 console.log('Welcome to the Student Management System!');
 main();
