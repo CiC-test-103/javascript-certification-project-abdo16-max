@@ -58,7 +58,7 @@ if (Number.isNaN(classYear) || classYear < 0) {
   break;
 }
 
-const student = new Student(name, email, classYear, specialization);
+const student = new Student(name, classYear, email, specialization);
 studentManagementSystem.addStudent(student);
 
 console.log('Current students:', studentManagementSystem.displayStudents());

@@ -74,6 +74,7 @@ class LinkedList {
    */
   removeStudent(email) {
     if(!this.head) return  // empty list
+    let target = email.toString(); 
     if(this.head.data.getEmail() === email){ // removing the head
       this.head = this.head.next
       if(!this.head){
@@ -219,6 +220,7 @@ class LinkedList {
 
     }
     await fs.writeFile(fileName, JSON.stringify(students, null, 2))
+     console.log(`Saved to ${fileName}`);
   }
 
   /**
@@ -235,7 +237,7 @@ class LinkedList {
     this.#clearStudents()
 
     for (let s of students){
-      const student = new Student(s.name, s.email, s.year, s.specialization)
+      const student = new Student(s.name, s.year, s.email, s.specialization)
       this.addStudent(student);
     }
   }
